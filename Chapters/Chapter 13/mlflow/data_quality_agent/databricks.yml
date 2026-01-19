@@ -1,7 +1,7 @@
-# This is a Databricks asset bundle definition for mlflow_model_registry.
+# This is a Databricks asset bundle definition for data_quality_agent.
 # See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
 bundle:
-  name: mlflow_model_registry
+  name: data_quality_agent
   uuid: d08bc209-3b2b-4356-b9eb-fc5eead4a4ca
 
 include:

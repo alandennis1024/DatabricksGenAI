@@ -1,6 +1,7 @@
 import argparse
 from databricks.sdk.runtime import spark
 from data_quality_agent import taxis
+from data_quality_agent.data_quality_agent import DataQualityAgent, DummyLLMClient
 
 
 def main():
@@ -16,7 +17,18 @@ def main():
     spark.sql(f"USE CATALOG {args.catalog}")
     spark.sql(f"USE SCHEMA {args.schema}")
 
- 
+    # Load data
+    df = taxis.find_all_taxis().toPandas()
+
+    # Create and run the agent
+    agent = DataQualityAgent(DummyLLMClient())
+    rules = agent.propose_rules(df)
+
+    # Print the rules
+    print("--- Proposed Data Quality Rules ---")
+    print(rules)
+    print("------------------------------------")
+
 
 if __name__ == "__main__":
     main()
