@@ -1,41 +1,56 @@
-# Data Quality Agent with MLflow
+# Data Quality Agent for CobaltWorks
 
 ## Purpose
-This project provides an MLflow model agent that accepts a pandas DataFrame and proposes data quality rules using a Large Language Model (LLM). The agent analyzes the DataFrame's schema, column names, and sample data, then generates rules in YAML format to help ensure data quality.
+This project provides an MLflow model agent that analyzes incoming Spark DataFrames, specifically a CobaltWorks delivery manifest, and proposes data quality rules using a Large Language Model (LLM). The agent now leverages schema, column names, sample data, and comprehensive summary statistics to generate tailored rules in YAML format, aiming to ensure high data quality in the bronze-to-silver ETL pipeline.
 
 ## How It Works
-- The agent receives a DataFrame as input.
-- It extracts the schema, column names, and a sample of the data.
-- It builds a prompt and sends it to an LLM (currently a dummy client; replace with your LLM API).
-- The LLM returns data quality rules in YAML format.
+- The agent receives a Spark DataFrame as input (e.g., a delivery manifest).
+- It extracts the schema, column names, a sample of the data, and computes summary statistics.
+- It builds a rich prompt incorporating all these data characteristics and sends it to an LLM (currently a dummy client).
+- The LLM returns data quality rules in YAML format, customized for the CobaltWorks context.
 - The agent outputs these rules for use in data validation or documentation.
 
 ## Usage
 1. Load the MLflow model agent (see `data_quality_agent.py`).
-2. Pass a pandas DataFrame to the agent's `propose_rules` method or use MLflow's `predict` interface.
-3. Receive YAML-formatted data quality rules.
+2. Run the `main.py` script, which internally generates a sample CobaltWorks delivery manifest DataFrame.
+3. Receive YAML-formatted data quality rules tailored to the manifest data.
 
 ## Customization
 - Replace `DummyLLMClient` in `data_quality_agent.py` with your preferred LLM API client (e.g., OpenAI, Azure OpenAI, local LLM).
-- Adjust the prompt template as needed for your use case.
+- Adjust the prompt template as needed for different CobaltWorks use cases or data sources.
 
 ## Example Output
 ```yaml
 rules:
-  - column: passenger_count
-    rule: must be >= 1
-  - column: fare_amount
-    rule: must be > 0
+  - column: product_id
+    rules:
+      - 'is not null'
+      - 'starts with CW-'
+  - column: quantity
+    rules:
+      - 'is not null'
+      - 'must be > 0'
+  - column: estimated_arrival_date
+    rules:
+      - 'is not null'
+      - 'is a valid ISO 8601 timestamp'
+      - 'is not in the past'
 ```
 
 ## Files
 - `src/data_quality_agent/data_quality_agent.py`: Main agent and MLflow wrapper implementation.
+- `src/data_quality_agent/cobaltworks_data.py`: Generates sample CobaltWorks data.
 - `README.md`: This documentation.
 
 ## Next Steps
 - Integrate with your LLM provider.
 - Extend rule generation logic for more advanced data quality checks.
-- Add tests and examples.
+- Add comprehensive unit and integration tests.
+
+## Future Enhancements
+- **Databricks Vector Search Integration:** Integrate a Vector Search index of historical rules to provide the LLM with context-specific and proven data quality patterns, improving the relevance and accuracy of proposed rules.
+- **DB App for Rule Approval:** Develop a Databricks App to allow data engineers to review and approve the LLM-proposed rules, seamlessly integrating the agent into existing data governance workflows.
+- **Dynamic Prompt Engineering:** Implement a more sophisticated prompt engineering strategy, potentially using MLflow Prompt Engineering, to dynamically adjust prompts based on data characteristics or user feedback.
 
 ---
 
