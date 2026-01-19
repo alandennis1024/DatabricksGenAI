@@ -5,8 +5,8 @@ authors = [{ name = "alan.dennis@covasant.com" }]
 requires-python = ">=3.10,<3.13"
 dependencies = [
     "mlflow",
-    "pandas",
-    "PyYAML"
+    "PyYAML",
+    "pandas"
 ]
 
 [dependency-groups]
