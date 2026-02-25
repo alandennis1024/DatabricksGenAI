@@ -1,0 +1,14 @@
+= Gemini Instructions
+
+This document outlines instructions for the Gemini agent.
+
+== File Placement
+
+All AsciiDoc (`.asciidoc`) and Markdown (`.md`) files, except for `README.md` files that are useful for GitHub repositories, should be placed in appropriate `docs` folders.
+
+== Python Best Practices
+
+Ensure that all Python code adheres to best practices, including:
+
+*   **Docstrings:** All modules, classes, methods, and functions must include comprehensive docstrings explaining their purpose, arguments, and return values.
+*   **Type Hints:** Use type hints for function arguments and return values to improve code readability and maintainability.

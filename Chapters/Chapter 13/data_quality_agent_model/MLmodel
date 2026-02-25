@@ -1,0 +1,16 @@
+artifact_path: data_quality_agent
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.pyfunc.model
+    python_model: python_model.py
+    code: code
+mlflow_version: 2.18.0
+model_uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+signature:
+  inputs: '[{"name": "table_name", "type": "string"}, {"name": "catalog", "type":
+    "string"}, {"name": "schema", "type": "string"}]'
+  outputs: '[{"name": "rules", "type": "string"}]'
+  params: null
