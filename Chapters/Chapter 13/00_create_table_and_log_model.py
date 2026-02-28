@@ -218,4 +218,4 @@ for r in rules[:5]:
 # MAGIC ## Next Steps
 # MAGIC
 # MAGIC The `run_id` variable contains the ID of the run we just created.
-# MAGIC Use it in **02_register_and_version.py** to register this model in Unity Catalog.
+# MAGIC Use **01_model_packaging** next to validate and register this model in Unity Catalog.
