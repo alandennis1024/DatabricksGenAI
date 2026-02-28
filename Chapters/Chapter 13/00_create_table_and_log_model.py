@@ -1,5 +1,4 @@
 # Databricks notebook source
-
 # MAGIC %md
 # MAGIC # Chapter 13 - Step 0: Create Table and Log Model
 # MAGIC
@@ -16,7 +15,8 @@
 
 # COMMAND ----------
 
-%pip install mlflow
+# MAGIC %pip install mlflow
+# MAGIC %restart_python
 
 # COMMAND ----------
 
@@ -147,9 +147,17 @@ display(df.limit(10))
 
 # COMMAND ----------
 
+# DBTITLE 1,Cell 8
 import mlflow
 from mlflow.models.signature import infer_signature
 import pandas as pd
+import sys
+
+# Add the code path to sys.path so we can import the model
+sys.path.insert(0, "data_quality_agent_model/code")
+
+# Import and instantiate the model class
+from data_quality_agent_model.python_model import DataQualityAgentModel
 
 # Signature: what the model expects and returns
 sample_input = pd.DataFrame({
@@ -158,24 +166,25 @@ sample_input = pd.DataFrame({
     "schema": [SCHEMA]
 })
 sample_output = pd.DataFrame({
-    "rules": ['[{"column": "amount", "rule": "amount > 0"}]']
+    "rules": ['{"column": "amount", "rule": "amount > 0"}']
 })
 signature = infer_signature(sample_input, sample_output)
 
 # Set experiment
 mlflow.set_experiment(f"/Users/{username}/data_quality_agent_experiment")
 
-# Log model
+# Log model with instance instead of file path
 with mlflow.start_run(run_name="data_quality_agent_v1") as run:
     mlflow.pyfunc.log_model(
-        artifact_path="data_quality_agent",
-        python_model="data_quality_agent_model/python_model.py",
+        name="data_quality_agent",
+        python_model=DataQualityAgentModel(),
         code_paths=["data_quality_agent_model/code/data_quality_agent"],
         artifacts={
             "system_prompt": "data_quality_agent_model/artifacts/system_prompt.txt",
             "example_rules": "data_quality_agent_model/artifacts/example_rules.json",
         },
         signature=signature,
+        input_example=sample_input,
         pip_requirements="data_quality_agent_model/requirements.txt",
     )
     run_id = run.info.run_id

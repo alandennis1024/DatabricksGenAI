@@ -1,5 +1,4 @@
 # Databricks notebook source
-
 # MAGIC %md
 # MAGIC # Chapter 13 — MLflow Model Packaging
 # MAGIC
@@ -11,6 +10,11 @@
 # MAGIC - An MLflow experiment configured in your workspace
 # MAGIC - The agent source code in the expected directory structure
 # MAGIC - Unity Catalog enabled with appropriate permissions
+
+# COMMAND ----------
+
+# MAGIC %pip install mlflow
+# MAGIC %restart_python
 
 # COMMAND ----------
 
@@ -26,6 +30,15 @@ CATALOG = "demo"
 SCHEMA  = "finance"
 TABLE   = "sales_transactions"
 
+try:
+    username = spark.conf.get("spark.databricks.notebook.userName")
+except:
+    username = "unknown"
+if username == "unknown":
+    username = spark.sql("SELECT current_user()").collect()[0][0]
+print(f"Current user: {username}")
+
+
 # COMMAND ----------
 
 # MAGIC %md
@@ -40,7 +53,12 @@ TABLE   = "sales_transactions"
 import mlflow
 from mlflow.models.signature import infer_signature
 import pandas as pd
+import sys
 
+# Add the code path to sys.path so we can import the model
+sys.path.insert(0, "data_quality_agent_model/code")
+# Import and instantiate the model class
+from data_quality_agent_model.python_model import DataQualityAgentModel
 # Define a sample input and output for signature inference
 sample_input = pd.DataFrame({
     "table_name": [TABLE],
@@ -52,19 +70,24 @@ sample_output = pd.DataFrame({
 })
 signature = infer_signature(sample_input, sample_output)
 
-with mlflow.start_run() as run:
+# Set experiment
+mlflow.set_experiment(f"/Users/{username}/data_quality_agent_experiment")
+
+# Log model with instance instead of file path
+with mlflow.start_run(run_name="data_quality_agent_v1") as run:
     mlflow.pyfunc.log_model(
-        artifact_path="data_quality_agent",
-        python_model="python_model.py",           # The PyFunc model class
-        code_paths=["code/data_quality_agent"],    # Custom Python modules
-        artifacts={                                 # Non-code assets
-            "system_prompt": "artifacts/system_prompt.txt",
-            "example_rules": "artifacts/example_rules.json"
+        name="data_quality_agent",
+        python_model=DataQualityAgentModel(),
+        code_paths=["data_quality_agent_model/code/data_quality_agent"],
+        artifacts={
+            "system_prompt": "data_quality_agent_model/artifacts/system_prompt.txt",
+            "example_rules": "data_quality_agent_model/artifacts/example_rules.json",
         },
-        signature=signature,                        # Input/output schema
-        pip_requirements="requirements.txt"         # Pinned dependencies
+        signature=signature,
+        input_example=sample_input,
+        pip_requirements="data_quality_agent_model/requirements.txt",
     )
-run_id = run.info.run_id
+    run_id = run.info.run_id
 print(f"Logged model in run: {run_id}")
 
 # COMMAND ----------
@@ -84,9 +107,9 @@ import mlflow
 model = mlflow.pyfunc.load_model(f"runs:/{run_id}/data_quality_agent")
 
 test_input = pd.DataFrame({
-    "table_name": ["sales_transactions"],
-    "catalog": ["dev_catalog"],
-    "schema": ["finance"]
+    "table_name": [TABLE],
+    "catalog": [CATALOG],
+    "schema": [SCHEMA]
 })
 result = model.predict(test_input)
 
@@ -113,3 +136,6 @@ mv = mlflow.register_model(
     name=model_name
 )
 print(f"Registered version {mv.version}")
+
+# COMMAND ----------
+
