@@ -16,6 +16,10 @@
 
 # COMMAND ----------
 
+%pip install mlflow
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC ## Configuration
 # MAGIC
