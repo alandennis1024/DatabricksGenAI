@@ -7,7 +7,7 @@
 # MAGIC serving endpoint. AI Gateway adds rate limiting, usage tracking,
 # MAGIC guardrails, and fallback routing without changing application code.
 # MAGIC
-# MAGIC **Continues from:** `08_model_serving` (endpoint already created)
+# MAGIC **Continues from:** `09_model_serving` (endpoint already created)
 
 # COMMAND ----------
 

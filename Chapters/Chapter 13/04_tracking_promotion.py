@@ -8,7 +8,7 @@
 # MAGIC best-performing run, compare it against thresholds, and promote
 # MAGIC only if it qualifies.
 # MAGIC
-# MAGIC **Continues from:** `01_model_packaging` (runs logged with metrics)
+# MAGIC **Continues from:** `03_evaluate_agent` (evaluation runs logged with metrics)
 
 # COMMAND ----------
 

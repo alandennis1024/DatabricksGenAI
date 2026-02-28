@@ -1,0 +1,28 @@
+# This is a Databricks asset bundle definition for mlflow.
+# The Databricks extension requires databricks.yml configuration file.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+
+bundle:
+  name: ch13-dab
+
+resources:
+  jobs:
+    inference_job:
+      name: "data-quality-agent-inference"
+      tasks:
+        - task_key: run_inference
+          notebook_task:
+            notebook_path: ./notebooks/run_agent.py
+            base_parameters:
+              model_name: "${var.catalog}.${var.schema}.data_quality_agent@champion"
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://dbc-30bba98b-fe92.cloud.databricks.com/
+  ## Optionally, there could be 'staging' or 'prod' targets here.
+  #
+  # prod:
+  #   workspace:
+  #     host: https://adb-7405613581513114.14.azuredatabricks.net

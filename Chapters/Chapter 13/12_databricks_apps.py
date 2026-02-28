@@ -7,7 +7,7 @@
 # MAGIC solution and verify that it is running. The app gives end users a way to
 # MAGIC interact with the agent without needing access to notebooks or API endpoints.
 # MAGIC
-# MAGIC **Continues from:** `08_model_serving` (serving endpoint available)
+# MAGIC **Continues from:** `09_model_serving` (serving endpoint available)
 
 # COMMAND ----------
 

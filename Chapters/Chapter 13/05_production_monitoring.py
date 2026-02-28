@@ -7,7 +7,7 @@
 # MAGIC deployed serving endpoint using inference tables. Every request and response
 # MAGIC is logged to Delta tables automatically — no application code changes needed.
 # MAGIC
-# MAGIC **Continues from:** `08_model_serving` (endpoint already created)
+# MAGIC **Continues from:** `09_model_serving` (endpoint already created)
 
 # COMMAND ----------
 
