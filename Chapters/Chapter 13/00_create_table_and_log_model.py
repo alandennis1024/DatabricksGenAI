@@ -1,7 +1,7 @@
 # Databricks notebook source
 
 # MAGIC %md
-# MAGIC # Chapter 13 - Step 1: Create Table and Log Model
+# MAGIC # Chapter 13 - Step 0: Create Table and Log Model
 # MAGIC
 # MAGIC This notebook corresponds to the **Models - Standardized Packaging Format** section
 # MAGIC of Chapter 13. It demonstrates:
@@ -27,6 +27,14 @@
 CATALOG = "demo"
 SCHEMA  = "finance"
 TABLE   = "sales_transactions"
+
+try:
+    username = spark.conf.get("spark.databricks.notebook.userName")
+except:
+    username = "unknown"
+if username == "unknown":
+    username = spark.sql("SELECT current_user()").collect()[0][0]
+print(f"Current user: {username}")
 
 spark.sql(f"CREATE CATALOG IF NOT EXISTS {CATALOG}")
 spark.sql(f"CREATE SCHEMA IF NOT EXISTS {CATALOG}.{SCHEMA}")
@@ -151,7 +159,6 @@ sample_output = pd.DataFrame({
 signature = infer_signature(sample_input, sample_output)
 
 # Set experiment
-username = spark.conf.get("spark.databricks.notebook.userName")
 mlflow.set_experiment(f"/Users/{username}/data_quality_agent_experiment")
 
 # Log model
