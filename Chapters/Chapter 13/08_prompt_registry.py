@@ -10,25 +10,31 @@
 # MAGIC
 # MAGIC **Prerequisites:**
 # MAGIC - MLflow Prompt Registry enabled in your workspace
+# MAGIC - A Unity Catalog schema with CREATE FUNCTION and EXECUTE privileges
 
 # COMMAND ----------
 
 # MAGIC %md
 # MAGIC ## 1. Register a Versioned Prompt Template
 # MAGIC
-# MAGIC Prompt templates use double curly brace `{{ }}` syntax for variables.
-# MAGIC Each time we register an updated template under the same name, MLflow
-# MAGIC creates a new immutable version automatically.
+# MAGIC Prompt templates use double-brace `{{variable}}` syntax for variables.
+# MAGIC Each registration under the same name creates a new immutable version
+# MAGIC automatically, similar to model versioning in Unity Catalog. The prompt
+# MAGIC name must include the full Unity Catalog path (`catalog.schema.name`).
 
 # COMMAND ----------
 
 import mlflow
 
+CATALOG = "dev_catalog"
+SCHEMA = "finance"
+PROMPT_NAME = f"{CATALOG}.{SCHEMA}.data_quality_agent_system_prompt"
+
 prompt = mlflow.genai.register_prompt(
-    name="data-quality-agent-system-prompt",
+    name=PROMPT_NAME,
     template=(
         "You are a data quality analysis agent. Analyze the "
-        "{{ table_name }} table in {{ catalog }}.{{ schema }} "
+        "{{table_name}} table in {{catalog}}.{{schema}} "
         "and propose data quality rules based on column metadata."
     ),
     commit_message="Initial system prompt for data quality agent",
@@ -49,15 +55,11 @@ print(f"Registered prompt version: {prompt.version}")
 
 # COMMAND ----------
 
-import mlflow
-
-# Load the candidate prompt from staging
-prompt = mlflow.genai.load_prompt(
-    "prompts:/data-quality-agent-system-prompt@staging"
-)
+# Load the candidate prompt by alias
+prompt = mlflow.genai.load_prompt(f"prompts:/{PROMPT_NAME}@staging")
 
 # Validate the template has the variables the agent expects
-required_vars = ["{{ table_name }}", "{{ catalog }}", "{{ schema }}"]
+required_vars = ["{{table_name}}", "{{catalog}}", "{{schema}}"]
 for var in required_vars:
     assert var in prompt.template, f"Missing variable: {var}"
 
@@ -74,10 +76,34 @@ print(f"Validation passed for version {prompt.version}")
 
 # COMMAND ----------
 
-mlflow.set_prompt_alias(
-    "data-quality-agent-system-prompt",
+mlflow.genai.set_prompt_alias(
+    name=PROMPT_NAME,
     alias="production",
-    version=prompt.version
+    version=prompt.version,
 )
 
 print(f"Promoted version {prompt.version} to 'production' alias")
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## 4. Load the Production Prompt at Runtime
+# MAGIC
+# MAGIC In a deployed application, we load the prompt by alias rather than
+# MAGIC by version number. When we promote a new version, the application
+# MAGIC picks it up automatically without redeployment.
+
+# COMMAND ----------
+
+production_prompt = mlflow.genai.load_prompt(
+    f"prompts:/{PROMPT_NAME}@production"
+)
+
+# Render the template with actual values
+rendered = production_prompt.format(
+    table_name="customer_transactions",
+    catalog="prod_catalog",
+    schema="finance",
+)
+
+print(rendered)
