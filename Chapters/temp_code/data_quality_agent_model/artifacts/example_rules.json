@@ -1,0 +1,32 @@
+[
+  {
+    "column": "amount",
+    "rule": "amount > 0",
+    "source": "llm",
+    "note": "Transaction amounts should always be positive"
+  },
+  {
+    "column": "email",
+    "rule": "email RLIKE '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$'",
+    "source": "llm",
+    "note": "Email addresses should match a standard format"
+  },
+  {
+    "column": "_cross_column",
+    "rule": "end_date >= start_date",
+    "source": "llm",
+    "note": "An event cannot end before it starts"
+  },
+  {
+    "column": "status",
+    "rule": "status IN ('active', 'inactive', 'pending', 'cancelled')",
+    "source": "llm",
+    "note": "Status should be one of the known allowed values"
+  },
+  {
+    "column": "quantity",
+    "rule": "quantity >= 0 AND quantity < 1000000",
+    "source": "llm",
+    "note": "Quantities should be non-negative and within a reasonable upper bound"
+  }
+]
