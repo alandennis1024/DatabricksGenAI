@@ -5,6 +5,12 @@
 bundle:
   name: ch13-dab
 
+variables:
+  catalog:
+    default: dev_catalog
+  schema:
+    default: finance
+
 resources:
   jobs:
     inference_job:

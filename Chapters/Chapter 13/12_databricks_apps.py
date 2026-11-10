@@ -32,9 +32,9 @@
 # MAGIC         env:
 # MAGIC           - name: "MODEL_ENDPOINT"
 # MAGIC             value: "data-quality-agent-endpoint"
-# MAGIC           - name: "CATALOG"
+# MAGIC           - name: "UC_CATALOG"
 # MAGIC             value: "${var.catalog}"
-# MAGIC           - name: "SCHEMA"
+# MAGIC           - name: "UC_SCHEMA"
 # MAGIC             value: "${var.schema}"
 # MAGIC ```
 

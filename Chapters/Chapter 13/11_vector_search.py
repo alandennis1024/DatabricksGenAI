@@ -47,14 +47,14 @@
 
 # COMMAND ----------
 
-CATALOG = "demo"
-SCHEMA  = "finance"
+UC_CATALOG = "dev_catalog"
+UC_SCHEMA  = "finance"
 
 # COMMAND ----------
 
 # MAGIC %sh
 # MAGIC databricks vector-search indexes get \
-# MAGIC   "${CATALOG}.${SCHEMA}.dq_rules_index" \
+# MAGIC   "${UC_CATALOG}.${UC_SCHEMA}.dq_rules_index" \
 # MAGIC   --endpoint-name dq-vector-endpoint
 
 # COMMAND ----------
