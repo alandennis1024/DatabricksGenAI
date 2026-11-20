@@ -1,11 +1,12 @@
 # Databricks notebook source
 
 # MAGIC %md
-# MAGIC # Chapter 13 — Vector Search Index Deployment
+# MAGIC # Chapter 13 — AI Search Index Deployment
 # MAGIC
-# MAGIC This notebook demonstrates how to deploy Vector Search infrastructure
-# MAGIC as part of the solution. We define a job in the DAB that creates or
-# MAGIC updates the index, and use the CLI to check index status.
+# MAGIC This notebook demonstrates how to deploy Databricks AI Search
+# MAGIC infrastructure as part of the solution. We define a job in the DAB
+# MAGIC that creates or updates the index, and use the CLI to check index
+# MAGIC status.
 # MAGIC
 # MAGIC **Use case:** Extend the data quality agent with a vector index that
 # MAGIC stores rules from across the organization. The agent retrieves the
@@ -14,9 +15,9 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## 1. DAB Configuration — Vector Search Setup Job
+# MAGIC ## 1. DAB Configuration — AI Search Setup Job
 # MAGIC
-# MAGIC Vector Search endpoints are workspace-level resources shared across
+# MAGIC AI Search endpoints are workspace-level resources shared across
 # MAGIC multiple indexes.
 # MAGIC
 # MAGIC ```yaml
@@ -47,12 +48,11 @@
 
 # COMMAND ----------
 
-UC_CATALOG = "dev_catalog"
-UC_SCHEMA  = "finance"
-
-# COMMAND ----------
-
 # MAGIC %sh
+# MAGIC # Shell variables are set here because %sh cells cannot see Python variables.
+# MAGIC UC_CATALOG=dev_catalog
+# MAGIC UC_SCHEMA=finance
+# MAGIC
 # MAGIC databricks vector-search indexes get \
 # MAGIC   "${UC_CATALOG}.${UC_SCHEMA}.dq_rules_index" \
 # MAGIC   --endpoint-name dq-vector-endpoint

@@ -1,0 +1,9 @@
+command:
+  - "streamlit"
+  - "run"
+  - "app.py"
+env:
+  # Overridden by the DAB app definition per environment; these defaults
+  # let the app run standalone.
+  - name: "MODEL_ENDPOINT"
+    value: "data-quality-agent-endpoint"
