@@ -1,0 +1,9 @@
+# Pins intentionally left open: run the notebooks, confirm the
+# version-dependent APIs noted in README.md, then pin what passed.
+# Example format once tested:
+#   databricks-sdk==<tested version>
+#   databricks-vectorsearch==<tested version>
+#   mlflow==<tested version>
+databricks-sdk
+databricks-vectorsearch
+mlflow
