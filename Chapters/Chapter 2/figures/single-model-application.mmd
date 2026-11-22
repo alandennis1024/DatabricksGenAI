@@ -1,0 +1,32 @@
+flowchart LR
+    User([User])
+
+    subgraph AppHost["Databricks Apps"]
+        Input[Input & Context]
+        Output[Output Parsing]
+    end
+
+    subgraph ModelHost["Databricks Model Serving"]
+        LLM{{Generative / LLM Model}}
+    end
+
+    subgraph Optional["Optional Add-ons"]
+        Context[(Retrieved Context)]
+        Examples[Few-Shot Examples]
+        Guardrails[Safety / Policy Checks]
+    end
+
+    User -->|prompt| Input
+    Input -->|HTTP request| LLM
+    LLM -->|generated response| Output
+    Output -->|final answer| User
+
+    Context -.->|enrich| Input
+    Examples -.->|guide| Input
+    Output -.->|validate| Guardrails
+    Guardrails -.->|refine| Output
+
+    style AppHost fill:#e1f5ff,stroke:#01579b
+    style ModelHost fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style LLM fill:#fff3e0,stroke:#e65100,stroke-width:3px
+    style Optional fill:#e8f5e9,stroke:#2e7d32,stroke-dasharray: 5 5

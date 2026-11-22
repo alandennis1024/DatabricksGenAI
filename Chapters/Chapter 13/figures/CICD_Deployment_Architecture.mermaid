@@ -1,0 +1,28 @@
+flowchart LR
+    subgraph GIT["Git repository - source of truth"]
+        CODE["Code, prompts, notebooks"]
+        DAB["databricks.yml<br/>Declarative Automation Bundle"]
+    end
+    subgraph CICD["CI/CD - GitHub Actions or Azure DevOps"]
+        VAL["bundle validate"]
+        EVAL{"Evaluation gate<br/>MLflow metrics"}
+        DEPLOY["bundle deploy<br/>per environment"]
+    end
+    subgraph WS["Databricks workspace - dev, staging, prod via catalog variables"]
+        REG["Unity Catalog registry<br/>model and prompt versions, aliases"]
+        AIQ["AI Search<br/>endpoint and Delta Sync index"]
+        SERV["Model Serving endpoint"]
+        GW["Unity Gateway<br/>rate limits, guardrails, fallback"]
+        APP["Databricks Apps"]
+    end
+    CODE --> VAL
+    DAB --> VAL
+    VAL --> EVAL
+    EVAL --> DEPLOY
+    DEPLOY --> REG
+    DEPLOY --> AIQ
+    REG -->|alias: champion| SERV
+    AIQ --> SERV
+    SERV --> GW
+    GW --> APP
+    SERV -.inference tables.-> REG

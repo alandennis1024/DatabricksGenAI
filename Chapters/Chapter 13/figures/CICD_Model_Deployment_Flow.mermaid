@@ -1,0 +1,15 @@
+sequenceDiagram
+    participant Dev as Developer
+    participant Git as Git Repository
+    participant CICD as CI/CD System<br/>(GitHub Actions /<br/>DevOps Pipelines)
+    participant DAB as Declarative<br/>Automation Bundle (DAB)
+    participant Registry as Unity Catalog<br/>Model Registry
+    participant Serving as Model Serving<br/>Endpoint
+
+    Dev->>Git: Commit code
+    Git-->>CICD: Detect change
+    CICD->>DAB: Deploy bundle
+    DAB->>Registry: Reference model by alias<br/>(e.g. "champion")
+    Note over Registry: Model does not move.<br/>Version stays in place.
+    DAB->>Serving: Update configuration<br/>to point at right version
+    Serving->>Registry: Serve model via alias

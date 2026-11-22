@@ -1,0 +1,37 @@
+flowchart TB
+    subgraph DP["Data and Knowledge Plane"]
+        direction LR
+        SRC[Source Data] --> ING[Ingestion Pipelines] --> DLT[Delta Tables] --> EMB[Embeddings] --> IDX[Indexes]
+    end
+
+    subgraph AP["Application and Inference Plane"]
+        direction LR
+        UI[User Interface] --> ORCH[Orchestration Logic] --> MDL[Models]
+        MDL --> TLS[Tools and Integration]
+        GRL[Guardrails]
+    end
+
+    subgraph CC["Cross-cutting Services"]
+        direction LR
+        AUTH[Authentication & Authorization]
+        GOV[Governance]
+        SEC[Secrets Management]
+        EVL[Evaluation Metrics]
+        MON[Tracing & Monitoring]
+        DEP[Deployment Automation]
+        COST[Cost & Operational Controls]
+    end
+
+    IDX -.->|retrieval| ORCH
+    TLS -.->|external systems| EXT[APIs, Databases, Other Services]
+    GRL -.->|boundaries on every call| ORCH
+    EVL -.->|informs iteration| MDL
+    MON -.->|observes| AP
+
+    CC -.-> DP
+    CC -.-> AP
+
+    style DP fill:#e1f5ff,stroke:#01579b
+    style AP fill:#fff3e0,stroke:#e65100
+    style CC fill:#e8f5e9,stroke:#2e7d32
+    style EXT fill:#f5f5f5,stroke:#424242

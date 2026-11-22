@@ -1,0 +1,50 @@
+%%{ init: { "theme": "default", "themeVariables": {
+  "primaryColor": "#ffffff",
+  "edgeLabelBackground": "#ffffff",
+  "nodeTextColor": "#1a1a1a",
+  "mainBkg": "#f9f9f9",
+  "accentColor": "#cc0000",
+  "fontSize": "14px",
+  "clusterBkg": "#f2f2f2",
+  "clusterBorder": "#999999"
+} } }%%
+
+flowchart TD
+
+    classDef brain fill:#ffffff,stroke:#cc0000,stroke-width:2px,color:#000000;
+    classDef memory fill:#f2f2f2,stroke:#666666,stroke-dasharray: 4,color:#1a1a1a;
+    classDef input fill:#ffffff,stroke:#999999,color:#1a1a1a;
+    classDef tool fill:#ffffff,stroke:#3366cc,color:#000000;
+    classDef output fill:#ffffff,stroke:#000000,color:#000000;
+    classDef gov fill:#f0f0f0,stroke:#999999,color:#555555,font-style:italic;
+
+    I["Sensor / Input<br><b>e.g., Prompt, Webhook, Event</b>"] --> B["<b>Brain</b><br>LLM Reasoning & Planning<br><i>Databricks Model Serving</i>"]
+    class I input
+    class B brain
+
+    subgraph M["Memory"]
+        M1["Short-Term Memory<br><i>Scratchpad, Context</i><br><i>Prompt Templates, Notebook State</i>"]
+        M2["Long-Term Memory<br><i>Knowledge Retrieval</i><br><i>Databricks Vector Search</i>"]
+    end
+    class M1,M2 memory
+
+    M1 --> B
+    M2 --> B
+    B --> M1
+
+    B --> T["Tools<br><i>APIs, SQL, Code, Workflows</i><br><i>Databricks Jobs, Functions, DBSQL</i>"]
+    class T tool
+    T --> B
+
+    B --> O["Output / Action<br><i>Response, UI Update, Notification</i><br><i>Dashboard, Webhook, App</i>"]
+    class O output
+
+    subgraph G["Governance & Observability"]
+        G1["Unity Catalog<br>• Access Control<br>• Model/Data Lineage"]
+        G2["Lakehouse Monitoring<br>• Logs<br>• Inference Tables"]
+    end
+    class G1,G2 gov
+
+    G1 --- B
+    G1 --- M2
+    G2 --- B

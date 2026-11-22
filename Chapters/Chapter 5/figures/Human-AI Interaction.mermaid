@@ -1,0 +1,54 @@
+graph LR
+    subgraph "Human-AI Interaction Continuum"
+        A("Standalone LLM (Prompt Engineering)")
+        B("RAG and Chain Systems")
+        C1("Single Agent Systems (Directed)")
+        C2("Single Agent Systems (Undirected)")
+        D("Multi-Agent Systems")
+
+        A --> B
+        B --> C1
+        C1 --> C2
+        C2 --> D
+
+        style A fill:#A7FFEB,stroke:#004D40,stroke-width:2px,color:#000
+        style B fill:#80CBC4,stroke:#004D40,stroke-width:2px,color:#000
+        style C1 fill:#4DB6AC,stroke:#004D40,stroke-width:2px,color:#000
+        style C2 fill:#26A69A,stroke:#004D40,stroke-width:2px,color:#000
+        style D fill:#00897B,stroke:#004D40,stroke-width:2px,color:#FFF
+
+        linkStyle 0 stroke-width:2px,fill:none,stroke:gray;
+        linkStyle 1 stroke-width:2px,fill:none,stroke:gray;
+        linkStyle 2 stroke-width:2px,fill:none,stroke:gray;
+        linkStyle 3 stroke-width:2px,fill:none,stroke:gray;
+
+        subgraph "Human Role"
+            e[Direct Prompting/Design] --- f[Architecting/Refining] --- g[Guiding/Monitoring] --- h[Supervisory/Governance]
+        end
+
+        subgraph "AI Autonomy"
+            i[Low] --- j[Moderate] --- k[High] --- l[Very High - Collective]
+        end
+
+        e --- A
+        f --- B
+        g --- C1
+        g --- C2
+        h --- D
+
+        i --- A
+        j --- B
+        k --- C1
+        k --- C2
+        l --- D
+
+        style e fill:#FFEBEE,stroke:#D32F2F,stroke-width:1px,color:#000
+        style f fill:#FFCDD2,stroke:#D32F2F,stroke-width:1px,color:#000
+        style g fill:#EF9A9A,stroke:#D32F2F,stroke-width:1px,color:#000
+        style h fill:#E57373,stroke:#D32F2F,stroke-width:1px,color:#000
+
+        style i fill:#E8F5E9,stroke:#388E3C,stroke-width:1px,color:#000
+        style j fill:#C8E6C9,stroke:#388E3C,stroke-width:1px,color:#000
+        style k fill:#A5D6A7,stroke:#388E3C,stroke-width:1px,color:#000
+        style l fill:#81C784,stroke:#388E3C,stroke-width:1px,color:#000
+    end

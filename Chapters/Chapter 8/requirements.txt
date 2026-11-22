@@ -1,0 +1,13 @@
+# Chapter 8 notebooks. Lower bounds are the versions the code was checked against.
+databricks-sdk>=0.94.0
+databricks-langchain>=0.23.0
+unitycatalog-ai[databricks]>=0.4.1
+mlflow>=3.18.0
+langchain>=1.2.10,<1.3
+# databricks-langchain pulls in unitycatalog-langchain, which caps langchain at
+# <=1.2.10, and langchain 1.2.x needs langgraph <1.1. langgraph-prebuilt 1.0.9+
+# only works with langgraph 1.1+, so keep it on the 1.0.8 release until the
+# caps are lifted. Without this pin, "from langchain.agents import create_agent"
+# fails with: cannot import name 'ExecutionInfo' from 'langgraph.runtime'.
+langgraph>=1.0.10,<1.1
+langgraph-prebuilt>=1.0.8,<1.0.9

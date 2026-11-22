@@ -1,0 +1,17 @@
+ flowchart TD
+    A["What are you deploying?"] -->|ML models, pipelines, evaluation workflows| B["Use MLOps Stacks"]
+    A -->|Notebooks, workflows, DLTs, ML models, dashboards| C["Use Declarative Automation Bundles"]
+
+    B --> D{"Need full ML lifecycle support?"}
+    D -->|Yes| E["Use MLOps Stacks (includes CI/CD, governance, templates)"]
+    D -->|No| F["Consider DABs if only deployment is needed"]
+
+    C --> G{"Is this part of a broader DevOps pipeline?"}
+    G -->|Yes| H["Use DABs with GitHub Actions / Azure DevOps"]
+    G -->|No| I["Use DABs locally or with VS Code extension"]
+
+    E --> J["Best for ML teams using MLflow, Mosaic AI, Unity Catalog"]
+    I --> K["Best for data engineers or hybrid teams managing diverse assets"]
+    F --> K 
+    H --> J
+    

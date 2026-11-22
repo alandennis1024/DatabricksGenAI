@@ -1,0 +1,41 @@
+%%{ init: { "theme": "default", "themeVariables": {
+  "primaryColor": "#ffffff",
+  "edgeLabelBackground": "#ffffff",
+  "nodeTextColor": "#1a1a1a",
+  "mainBkg": "#f2f2f2",
+  "accentColor": "#cc0000",
+  "fontSize": "14px",
+  "clusterBkg": "#e6e6e6",
+  "clusterBorder": "#999999"
+} } }%%
+
+flowchart TD
+
+%% Document Ingestion Pipeline
+    subgraph "Document Ingestion Pipeline"
+        A["Raw Documents (PDFs, HTML, etc.)"] --> B["Parse & Chunk Documents"]
+        B --> C["Generate Embeddings via Model Serving"]
+        C --> D["Store Embeddings in Vector Store"]
+    end
+
+%% Inference Workflow
+    subgraph "Inference Workflow"
+        E["User Query"] --> F["Embed Query via Model Serving"]
+        F --> G["Retrieve Relevant Chunks from Vector Store"]
+        G --> H["Augment Prompt with Retrieved Context"]
+        H --> I["Generate Response via LLM (Model Serving)"]
+        I --> J["Return Response to User"]
+    end
+
+%% Governance
+    subgraph "Governance"
+        K["Unity Catalog"]
+    end
+
+%% Connections
+    D -.-> G
+    K -.-> D
+    K -.-> C
+    K -.-> G
+    K -.-> I
+    K -.-> F

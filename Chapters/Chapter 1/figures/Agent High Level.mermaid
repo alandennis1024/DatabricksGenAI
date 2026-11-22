@@ -1,0 +1,52 @@
+%%{ init: { "theme": "default", "themeVariables": {
+  "primaryColor": "#ffffff",
+  "edgeLabelBackground": "#ffffff",
+  "nodeTextColor": "#1a1a1a",
+  "mainBkg": "#f2f2f2",
+  "accentColor": "#cc0000",
+  "fontSize": "14px",
+  "clusterBkg": "#e6e6e6",
+  "clusterBorder": "#999999"
+} } }%%
+
+flowchart TD
+    classDef agent fill:#cc0000,stroke:#cc0000,color:#ffffff;
+    classDef brain fill:#ffffff,stroke:#cc0000,stroke-width:2px;
+    classDef action fill:#ffffff,stroke:#999999;
+    classDef tool fill:#ffffff,stroke:#6666cc;
+    classDef memory fill:#f2f2f2,stroke:#666666,stroke-dasharray: 4;
+    classDef output fill:#ffffff,stroke:#000000;
+
+    A["User Input"] --> B["LLM-Based Agent"]
+    class B agent
+
+    B --> C["LLM (Brain)"]
+    class C brain
+
+    C --> D["Decide on Action"]
+    class D action
+
+    D --> E["Use Tools / Call Functions"]
+    class E tool
+
+    D --> F["Ask for More Info"]
+    class F action
+
+    D --> G["Generate Final Answer"]
+    class G action
+
+    E --> H["External Systems<br>(Search, Database, APIs)"]
+    class H tool
+    H --> C
+
+    G --> I["Agent Output"]
+    class I output
+
+    subgraph "Agent Memory"
+        M1["Context Window<br>(Short-Term Memory)"]
+        M2["Knowledge Base<br>(Vector Store / RAG)"]
+    end
+    class M1,M2 memory
+
+    B --> M1
+    C --> M2

@@ -1,0 +1,17 @@
+%%{ init: { "theme": "default", "themeVariables": {
+  "primaryColor": "#ffffff",
+  "edgeLabelBackground": "#ffffff",
+  "nodeTextColor": "#1a1a1a",
+  "mainBkg": "#f9f9f9",
+  "accentColor": "#cc0000",
+  "fontSize": "14px",
+  "clusterBkg": "#f2f2f2",
+  "clusterBorder": "#999999"
+} } }%%
+
+flowchart LR
+    A["User Input"] --> B["LLM Reasoning"]
+    B --> C["Predefined Plan"]
+    C --> D["Call Tool A"]
+    D --> E["Call Tool B"]
+    E --> F["Generate Final Answer"]

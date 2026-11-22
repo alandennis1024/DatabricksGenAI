@@ -1,0 +1,43 @@
+flowchart LR
+    subgraph GIT["Git repository - source of truth"]
+        CODE["Code, notebooks,<br/>prompts, configuration"]
+        YML["databricks.yml<br/>Declarative Automation Bundle"]
+        STACKS["MLOps Stacks<br/>(DAB template for classic ML)"]
+        STACKS --> YML
+        CODE --> YML
+    end
+
+    subgraph CICD["CI/CD and automation"]
+        GHA["GitHub Actions"]
+        AZD["Azure DevOps Pipelines"]
+        JEN["Jenkins / GitLab CI"]
+    end
+
+    CLI["Databricks CLI"]
+    TF["Terraform +<br/>Databricks provider<br/>(optional infrastructure path)"]
+
+    subgraph WS["Databricks workspace - one per environment"]
+        REG["Unity Catalog registry<br/>models and prompts:<br/>versions and aliases"]
+        TRACK["MLflow Tracking<br/>experiments, metrics, traces"]
+        JOBS["Lakeflow<br/>jobs and pipelines"]
+        AIQ["AI Search<br/>endpoints and Delta Sync indexes"]
+        SERV["Model Serving endpoints"]
+        GW["Unity Gateway<br/>rate limits, guardrails, fallback"]
+        APPS["Databricks Apps"]
+    end
+
+    GHA --> CLI
+    AZD --> CLI
+    JEN --> CLI
+    CLI -->|"bundle validate, bundle deploy"| YML
+    TF --> WS
+    YML --> REG
+    YML --> TRACK
+    YML --> JOBS
+    YML --> AIQ
+    YML --> SERV
+    YML --> APPS
+    JOBS --> AIQ
+    REG -->|"serve by alias"| SERV
+    SERV --> GW
+    GW --> APPS

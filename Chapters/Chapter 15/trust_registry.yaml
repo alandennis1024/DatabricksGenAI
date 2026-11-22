@@ -1,0 +1,46 @@
+# Trust registry for remote agents that CobaltWorks exchanges tasks with.
+# An agent that is not listed here, is revoked, or has expired gets no tasks.
+version: 1
+data_classes:
+  # Classes a task may carry, from least to most sensitive.
+  - public
+  - shipment_reference
+  - delivery_window
+  - pricing_confidential
+  - supplier_master
+agents:
+  - agent_id: apex-haulers-logistics
+    organization: Apex Haulers
+    identity:
+      issuer: https://agents.apex.example
+      agent_card_url: https://agents.apex.example/.well-known/agent-card.json
+    a2a_versions: ["0.3", "1.0"]
+    capabilities:
+      - rebooking_quote
+      - shipment_status
+    allowed_data_classes:
+      - shipment_reference
+      - delivery_window
+    service_level:
+      response_seconds: 30
+      availability_percent: 99.5
+    status: active
+    expires_on: "2028-06-30"
+    revoked_at: null
+  - agent_id: steel-supplier-pricing
+    organization: Northfield Steel
+    identity:
+      issuer: https://agents.nfs.example
+      agent_card_url: https://agents.nfs.example/.well-known/agent-card.json
+    a2a_versions: ["1.0"]
+    capabilities:
+      - spot_price_quote
+    allowed_data_classes:
+      - public
+      - pricing_confidential
+    service_level:
+      response_seconds: 60
+      availability_percent: 99.0
+    status: revoked
+    expires_on: "2028-12-31"
+    revoked_at: "2028-02-14T09:30:00Z"

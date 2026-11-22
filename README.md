@@ -1,89 +1,51 @@
-= Data Quality Agent Example: MLflow Packaging, Deployment, and Lifecycle
+# Generative AI Solutions with Databricks — Companion Code and Artifacts
 
-This example project demonstrates how to build, package, and deploy a model-hosted agent for data quality rule generation using MLflow and Databricks. The agent analyzes dataframe schemas and statistics, then leverages a large language model (LLM) for advanced reasoning. The project covers the full MLflow lifecycle, including tracking, projects, prompt registry, deployment pipelines, and integration with Databricks Model Serving, vector search indexes, and DB Apps.
+This repository contains the companion code, prompts, templates, and figure
+sources for the O'Reilly book **Generative AI Solutions with Databricks**.
 
-== Project Structure
+Read the book on the O'Reilly platform:
+<https://learning.oreilly.com/library/view/generative-ai-solutions/9798341639881/>
 
-[source]
-/data_quality_agent_model/
-├── MLmodel
-├── requirements.txt
-├── code/
-│ └── data_quality_agent/
-│ ├── init.py
-│ ├── agent.py
-│ └── utils.py
-├── artifacts/
-│ ├── system_prompt.txt
-│ └── example_rules.json
-└── python_model.py
-== MLflow Packaging
+Throughout the book, the fictional company **CobaltWorks** serves as the
+running case study; all sample data, names, and numbers are illustrative.
 
-The agent is packaged using MLflow’s Python model format.
-All dependencies are listed in requirements.txt.
-Custom logic is organized under code/data_quality_agent/.
-Artifacts such as prompt templates and example rules are stored in the artifacts/ directory.
-== MLflow Tracking
+## Repository layout
 
-Training runs, parameters, metrics, and artifacts are logged using MLflow Tracking.
-Example:
-[source,python]
-import mlflow
+Code and artifacts are organized by chapter under `Chapters/Chapter N/`:
 
-with mlflow.start_run():
-mlflow.log_param("llm_model", "gpt-4")
-mlflow.log_metric("rule_coverage", 0.92)
-mlflow.log_artifact("artifacts/example_rules.json")
+| Chapter | Contents |
+|---|---|
+| 1 | Genie Code image-prompt exchange (text) · figure sources |
+| 2 | Figure sources |
+| 3 | Genie Code prompt for building the CobaltWorks Spec Assistant · figure sources |
+| 5 | Design & Architecture Blueprint template (DOCX/MD) · NFR checklist (XLSX) · example notebook · figure sources |
+| 6 | RAG notebooks: sample data, AI Search index, filtered queries, RAG chain, metadata-filter access control, and the two-user access-control validation test |
+| 8 | Agent notebooks: UC function tools, tool-calling agent, router agent, human-in-the-loop, guided vs. unguided |
+| 9 | Agents on transactional systems: operational tools, guardrails, MCP demo, Lakebase memory, audit trail and queries |
+| 12 | Evaluation notebooks: eval dataset, `mlflow.genai.evaluate`, judge debugging, custom judges, version comparison gate, production monitoring, trace audit |
+| 13 | Data quality agent end to end: packaging, registry, aliases, evaluation, promotion, prompt registry, serving, gateway, AI Search, Apps, ingestion — plus the `ch13-dab` Declarative Automation Bundle and Streamlit app |
+| 15 | Looking ahead: prompt registry, decision records, MCP tool contract, trust registry, operating views |
 
-== MLflow Projects
+Figure sources live in `Chapters/Chapter N/figures/`; see the README in each
+folder for the disclaimer and rendering instructions.
 
-The project can be run as an MLflow Project for reproducibility.
-Example MLproject file:
-[source,yaml]
-name: data-quality-agent
-conda_env: requirements.txt
-entry_points:
-main:
-parameters:
-data_path: {type: str}
-command: "python code/data_quality_agent/agent.py --data_path {data_path}"
+## Using the notebooks
 
-== MLflow Model Registry
+- Notebooks are in **Databricks Python notebook source format** (files start
+  with `# Databricks notebook source`). Import them into a Databricks
+  workspace — as a Git folder or via workspace import — and run them there.
+  They are not standalone Python scripts.
+- Each chapter folder has its own `README.md` (notebook-to-book mapping,
+  prerequisites, cost warnings) and `requirements.txt`.
+- Run the notebooks in order, starting with `00_setup_*`. Finish with
+  `99_cleanup.py`, which deletes created resources — it runs only when the
+  `confirm` widget is set to `yes`.
+- **These notebooks create billable resources** (for example, AI Search
+  endpoints are billed while they exist). Do not skip the cleanup notebook.
+- A Unity Catalog-enabled workspace with serverless compute (or a DBR 17+
+  cluster) is assumed.
 
-Models are registered, versioned, and promoted through the MLflow Model Registry.
-Use stage transitions (Staging, Production, Archived) for lifecycle management.
-== Prompt Registry
+## Feedback and reuse
 
-Prompt templates are versioned and tracked as MLflow artifacts.
-Example:
-[source,python]
-mlflow.log_artifact("artifacts/system_prompt.txt")
-== Deployment Pipelines
-
-CI/CD pipelines (GitHub Actions, Azure DevOps) automate packaging, validation, and deployment.
-Example workflow:
-Checkout code from Git.
-Build and validate MLflow model.
-Deploy to Databricks Model Serving using Databricks CLI or Asset Bundles (DABs).
-== Databricks Model Serving
-
-The packaged agent is deployed as a REST endpoint using Databricks Model Serving.
-Supports scalable, secure inference for production workloads.
-== Vector Search Indexes & DB Apps
-
-Integrate with Databricks Vector Search for semantic retrieval.
-Expose agentic logic via DB Apps for interactive user experiences.
-== Getting Started
-
-Clone the repository.
-Install dependencies: pip install -r requirements.txt
-Run training and log results: python code/data_quality_agent/agent.py --data_path <your_data.csv>
-Package and register the model with MLflow.
-Deploy using Databricks CLI or Asset Bundles.
-== References
-
-https://mlflow.org/docs/latest/index.html
-https://docs.databricks.com/en/mlflow/index.html
-https://docs.databricks.com/en/machine-learning/model-serving/index.html
-https://docs.databricks.com/en/generative-ai/vector-search/index.html
-https://docs.databricks.com/en/db-apps/index.html
+If you find an error in the code or the book, please open an issue. If you
+reuse or adapt the code or diagrams, please credit the book.
