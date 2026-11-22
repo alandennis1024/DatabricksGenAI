@@ -1,0 +1,7 @@
+databricks-langchain[memory]>=0.23.0
+langchain>=1.5.2
+langgraph>=1.2.24
+mlflow>=3.18.0
+mcp>=1.24,<2
+langchain-mcp-adapters>=0.3.2
+databricks-sdk>=0.169.0

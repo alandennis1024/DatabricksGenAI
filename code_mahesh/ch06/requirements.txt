@@ -1,0 +1,7 @@
+# Lower bounds verified offline against these releases (see README.md):
+#   databricks-ai-search 0.83, databricks-sdk 0.169.0.
+# Serverless and DBR 17+ already ship a databricks-sdk; pip only upgrades it
+# when it is older than the bound below.
+# MLflow is not imported by these notebooks, so it is not listed.
+databricks-ai-search>=0.83
+databricks-sdk>=0.169.0
