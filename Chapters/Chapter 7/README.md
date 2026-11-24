@@ -1,6 +1,7 @@
 # Chapter 7 — Application Development with AI Models
+Runnable companion notebooks for Chapter 7 of *Generative AI Solutions with Databricks* 
 
-This chapter extends the **Chapter 6** learning pattern: Databricks source-format (`.py`) notebooks, consistent widgets, synthetic CobaltWorks data, step-by-step setup, tests, troubleshooting, and a guarded cleanup notebook. It illustrates **Pydantic contracts, MLflow model packaging, Auto Loader PDF ingestion, Databricks AI Search, a real chat-model call, deterministic safety validation, LLM evaluation, MLflow tracing, and defensive security patterns**.
+This chapter extends the learning pattern from previous chapters: Databricks source-format (`.py`) notebooks, consistent widgets, synthetic CobaltWorks data, step-by-step setup, tests, troubleshooting, and a guarded cleanup notebook. It illustrates **Pydantic contracts, MLflow model packaging, Auto Loader PDF ingestion, Databricks AI Search, a real chat-model call, deterministic safety validation, LLM evaluation, MLflow tracing, and defensive security patterns**.
 
 > **Safety and authenticity:** CobaltWorks and the XM-400 turbine are fictional. The sample PDF and all telemetry are **synthetic training material** and **not approved equipment procedures**. Nothing in this lab authorizes maintenance work. The lab receives a **precomputed acoustic anomaly score** and a Boolean thermal-risk flag; it does **not** run a trained acoustic classifier, a VLM, or four production models. Real physical maintenance decisions belong to qualified staff and approved site procedures.
 
