@@ -1,0 +1,43 @@
+bundle:
+  name: cobalt-qa-multimodal-assistant
+
+variables:
+  model_version:
+    description: "The version of the model to serve"
+    default: "1"
+
+# One serving endpoint. The ingestion pipeline is provisioned separately.
+resources:
+  model_serving_endpoints:
+    qa_gateway:
+      name: cobalt-qa-assistant-${bundle.target}
+      config:
+        served_entities:
+          - entity_name: cobalt_prod.quality_assurance.xray_analyzer
+            entity_version: ${var.model_version}
+            workload_size: Small
+            scale_to_zero_enabled: true
+
+# Define deployment targets
+targets:
+  dev:
+    workspace:
+      host: https://dev-workspace.cloud.databricks.com
+    default: true
+    mode: development
+
+  staging:
+    workspace:
+      host: https://staging-workspace.cloud.databricks.com
+    # Uses a Service Principal for automated deployment
+    run_as:
+      service_principal_name: sp-staging-deployer
+
+  prod:
+    workspace:
+      host: https://prod-workspace.cloud.databricks.com
+    run_as:
+      service_principal_name: sp-prod-deployer
+    # Supply the approved immutable numeric version at release time.
+    variables:
+      model_version: "5"
