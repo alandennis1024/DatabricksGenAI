@@ -1,0 +1,11 @@
+# Optional dependencies for full reference examples and opt-in MLflow/AI Search.
+# Compatibility ranges only; replace with a validated lockfile after a live run.
+mlflow>=3.4,<4
+databricks-ai-search>=0.80,<1
+pandas>=2.2,<3
+numpy>=1.26,<3
+pytest>=8,<10
+# Optional for reference_examples/02 and 03:
+# opencv-python-headless>=4.10
+# librosa>=0.11
+# soundfile>=0.13

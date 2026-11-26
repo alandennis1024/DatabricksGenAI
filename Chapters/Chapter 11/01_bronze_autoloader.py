@@ -1,29 +1,34 @@
-from pyspark.sql.functions import col, current_timestamp, lit
+# Databricks notebook source
+# MAGIC %md
+# MAGIC # 01 — Bronze governed image ingestion
+# MAGIC Binary ingestion records files; it **does not validate or redact** their contents.
 
-# 1. Define the secure volume path in Unity Catalog
-# Volumes provide a managed way to handle files without raw S3/ADLS IAM access
-raw_images_path = "/Volumes/cobalt_prod/factory_bronze/raw_qa_images/"
-checkpoint_path = "/Volumes/cobalt_prod/factory_bronze/_checkpoints/qa_images/"
+# COMMAND ----------
+from cobalt_ch11 import qualified_schema
+from pyspark.sql import functions as F
 
-# 2. Use Databricks Auto Loader to ingest binary files (images)
-# Retain the file path and basic metadata for source attribution.
-# Binary-file ingestion does NOT validate image contents or guarantee
-# detection of malformed images. Validate and quarantine separately.
-df_bronze_images = (spark.readStream
-    .format("cloudFiles")
-    .option("cloudFiles.format", "binaryFile")
-    .option("pathGlobFilter", "*.png")
-    .load(raw_images_path)
-    .withColumn("source_file_path", col("path"))
-    .withColumn("ingestion_timestamp", current_timestamp())
-    .withColumn("processing_status", lit("RAW"))
-)
+dbutils.widgets.text("catalog", "cobalt_ops")
+dbutils.widgets.text("schema", "ch11")
+catalog, schema = dbutils.widgets.get("catalog"), dbutils.widgets.get("schema")
+ns = qualified_schema(catalog, schema)
+root = f"/Volumes/{catalog}/{schema}/ch11_media"
+table_name = f"{ns}.ch11_bronze_images"
 
-# 3. Store raw content and metadata in a governed Delta table.
-# This table is not an AI Search index and may contain sensitive data.
-(df_bronze_images.writeStream
-    .format("delta")
-    .option("checkpointLocation", checkpoint_path)
-    .trigger(availableNow=True)
-    .table("cobalt_prod.factory_bronze.qa_image_metadata")
-)
+# COMMAND ----------
+raw = (spark.readStream.format("cloudFiles")
+       .option("cloudFiles.format", "binaryFile")
+       .option("cloudFiles.schemaLocation", f"{root}/_schema_images")
+       .option("pathGlobFilter", "*.png")
+       .load(f"{root}/image_in")
+       .select(F.col("path").alias("source_file"),
+               F.col("content"), F.col("length"),
+               F.current_timestamp().alias("ingested_at")))
+query = (raw.writeStream.format("delta")
+         .option("checkpointLocation", f"{root}/_checkpoint_images")
+         .trigger(availableNow=True)
+         .toTable(table_name))
+query.awaitTermination()
+count = spark.table(table_name).count()
+assert count >= 2, "Run 00 first; expected a valid and an invalid PNG"
+print(f"[PASS] Read {count} raw image records into {table_name}")
+print("[REVIEW] The broken .png is deliberately ingested for later quarantine")
