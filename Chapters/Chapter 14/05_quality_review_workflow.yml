@@ -1,0 +1,15 @@
+# Chapter 14 reference: Dispatch and review of a quality alert.
+# Human-review GitHub environment must be configured. No automatic rollback is implemented here.
+
+name: Review AI quality alert
+on:
+  repository_dispatch:
+    types: [model_quality_alert]
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    environment: staging-review
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record decision requirement
+        run: echo "Review evidence before modifying serving routes"
