@@ -1,0 +1,3 @@
+# Offline package validation. All notebook runtime libraries come from Databricks.
+pytest>=8.0,<10.0
+PyYAML>=6.0,<7.0

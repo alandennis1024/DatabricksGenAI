@@ -1,0 +1,18 @@
+# Optional CLI example. This only deploys a setup-smoke job: no Genie agent,
+# Lakeflow pipeline, streaming job or serving endpoint is auto-provisioned.
+bundle:
+  name: cobalt-ch10-companion
+
+resources:
+  jobs:
+    ch10_setup_smoke:
+      name: "[${bundle.target}] CobaltWorks Chapter 10 sample setup"
+      tasks:
+        - task_key: generate_sample_csv
+          notebook_task:
+            notebook_path: ./00_setup_sample_data.py
+
+targets:
+  dev:
+    default: true
+    mode: development
